@@ -11,7 +11,13 @@
     "test:coverage": "jest --coverage --runInBand --detectOpenHandles",
     "seed": "tsx src/config/seed.ts"
   },
-  "keywords": ["car-dealership", "express", "sqlite", "tdd", "jwt"],
+  "keywords": [
+    "car-dealership",
+    "express",
+    "sqlite",
+    "tdd",
+    "jwt"
+  ],
   "author": "Saurabh Tiwari",
   "license": "MIT",
   "dependencies": {
@@ -36,6 +42,6 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.15",
     "tsx": "^4.21.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.7.3"
   }
 }

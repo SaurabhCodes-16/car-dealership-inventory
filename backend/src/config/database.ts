@@ -22,6 +22,15 @@ export function getDatabase(customPath?: string): Database.Database {
   return dbInstance;
 }
 
+export function closeDatabase(db?: Database.Database) {
+  if (db && db.open) {
+    db.close();
+  } else if (dbInstance && dbInstance.open) {
+    dbInstance.close();
+    dbInstance = null;
+  }
+}
+
 export function initSchema(db: Database.Database) {
   // Users table
   db.exec(`
