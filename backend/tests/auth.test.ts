@@ -17,7 +17,7 @@ describe('Authentication API - TDD Test Suite', () => {
   });
 
   afterAll(() => {
-    closeDatabase(db);
+    closeDatabase();
     try {
       if (fs.existsSync(TEST_DB)) fs.unlinkSync(TEST_DB);
     } catch (e) {}

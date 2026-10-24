@@ -2,19 +2,18 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 
-const DB_FILE = process.env.DB_PATH || path.join(__dirname, '../../dealership.sqlite');
-
 let dbInstance: Database.Database | null = null;
+let currentDbPath: string | null = null;
 
 export function getDatabase(customPath?: string): Database.Database {
-  if (customPath) {
-    const db = new Database(customPath);
-    initSchema(db);
-    return db;
-  }
+  const targetPath = customPath || process.env.DB_PATH || path.join(__dirname, '../../dealership.sqlite');
   
-  if (!dbInstance) {
-    dbInstance = new Database(DB_FILE);
+  if (!dbInstance || currentDbPath !== targetPath) {
+    if (dbInstance && dbInstance.open) {
+      dbInstance.close();
+    }
+    dbInstance = new Database(targetPath);
+    currentDbPath = targetPath;
     dbInstance.pragma('journal_mode = WAL');
     dbInstance.pragma('foreign_keys = ON');
     initSchema(dbInstance);
@@ -22,13 +21,12 @@ export function getDatabase(customPath?: string): Database.Database {
   return dbInstance;
 }
 
-export function closeDatabase(db?: Database.Database) {
-  if (db && db.open) {
-    db.close();
-  } else if (dbInstance && dbInstance.open) {
+export function closeDatabase() {
+  if (dbInstance && dbInstance.open) {
     dbInstance.close();
-    dbInstance = null;
   }
+  dbInstance = null;
+  currentDbPath = null;
 }
 
 export function initSchema(db: Database.Database) {
