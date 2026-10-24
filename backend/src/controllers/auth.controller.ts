@@ -4,27 +4,20 @@ import { randomUUID } from 'crypto';
 import { UserRepository } from '../repositories/user.repository';
 import { generateToken, AuthenticatedRequest } from '../middleware/auth.middleware';
 import { UserRole } from '../models/types';
+import { registerSchema, loginSchema } from '../validators/auth.validator';
 
 const userRepo = new UserRepository();
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
-    const { name, email, password, role } = req.body;
-
-    if (!email || !password || !name) {
-      res.status(400).json({ error: 'Missing required fields: name, email, and password are required.' });
+    const parsed = registerSchema.safeParse(req.body);
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      res.status(400).json({ error: issue.message });
       return;
     }
 
-    if (typeof email !== 'string' || !email.includes('@')) {
-      res.status(400).json({ error: 'Please provide a valid email address.' });
-      return;
-    }
-
-    if (typeof password !== 'string' || password.length < 6) {
-      res.status(400).json({ error: 'Password must be at least 6 characters in length.' });
-      return;
-    }
+    const { name, email, password, role } = parsed.data;
 
     const existingUser = userRepo.findByEmail(email);
     if (existingUser) {
@@ -71,12 +64,13 @@ export async function register(req: Request, res: Response): Promise<void> {
 
 export async function login(req: Request, res: Response): Promise<void> {
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      res.status(400).json({ error: 'Both email and password are required.' });
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.issues[0].message });
       return;
     }
+
+    const { email, password } = parsed.data;
 
     const user = userRepo.findByEmail(email);
     if (!user || !user.password) {
