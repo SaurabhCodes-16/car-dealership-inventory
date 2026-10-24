@@ -86,20 +86,25 @@ export function initSchema(db: Database.Database) {
 }
 
 export function seedInitialData(db: Database.Database) {
-  // Check if users already seeded
-  const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
-  if (userCount.count === 0) {
-    const salt = bcrypt.genSaltSync(10);
+  // Check if admin user exists
+  const adminExists = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@dealership.com');
+  const buyerExists = db.prepare('SELECT id FROM users WHERE email = ?').get('buyer@dealership.com');
+
+  const salt = bcrypt.genSaltSync(10);
+  const now = new Date().toISOString();
+
+  const insertUser = db.prepare(`
+    INSERT OR IGNORE INTO users (id, name, email, password, role, createdAt)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+
+  if (!adminExists) {
     const adminPass = bcrypt.hashSync('admin123', salt);
-    const customerPass = bcrypt.hashSync('buyer123', salt);
-    const now = new Date().toISOString();
-
-    const insertUser = db.prepare(`
-      INSERT INTO users (id, name, email, password, role, createdAt)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-
     insertUser.run('usr-admin-1', 'Dealership Administrator', 'admin@dealership.com', adminPass, 'admin', now);
+  }
+
+  if (!buyerExists) {
+    const customerPass = bcrypt.hashSync('buyer123', salt);
     insertUser.run('usr-customer-1', 'Saurabh Buyer', 'buyer@dealership.com', customerPass, 'customer', now);
   }
 
