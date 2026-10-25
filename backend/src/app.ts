@@ -4,14 +4,18 @@ import helmet from 'helmet';
 import authRoutes from './routes/auth.routes';
 import vehicleRoutes from './routes/vehicle.routes';
 import { getDatabase } from './config/database';
+import { requestIdMiddleware } from './middleware/requestId.middleware';
 
 const app = express();
 
-// Security & Parsing Middlewares
+// Security, Tracing & Parsing Middlewares
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
-app.use(cors());
+app.use(requestIdMiddleware);
+app.use(cors({
+  exposedHeaders: ['X-Request-ID']
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // API Routes

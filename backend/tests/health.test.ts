@@ -36,5 +36,14 @@ describe('Health Diagnostics API', () => {
     expect(typeof res.body.database.vehiclesCount).toBe('number');
     expect(res.body).toHaveProperty('memory');
     expect(typeof res.body.uptimeSeconds).toBe('number');
+    expect(res.headers['x-request-id']).toBeDefined();
+  });
+
+  it('should echo client-provided X-Request-ID correlation header', async () => {
+    const customId = 'client-trace-abc-123';
+    const res = await request(app).get('/health').set('X-Request-ID', customId);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['x-request-id']).toBe(customId);
   });
 });
