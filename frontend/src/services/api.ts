@@ -24,8 +24,8 @@ export const authApi = {
     const res = await api.post('/auth/login', { email, password });
     return res.data;
   },
-  register: async (name: string, email: string, password: string, role: 'customer' | 'admin' = 'customer'): Promise<{ token: string; user: User }> => {
-    const res = await api.post('/auth/register', { name, email, password, role });
+  register: async (name: string, email: string, password: string, role: 'customer' | 'admin' = 'customer', adminSecretCode?: string): Promise<{ token: string; user: User }> => {
+    const res = await api.post('/auth/register', { name, email, password, role, adminSecretCode });
     return res.data;
   },
   getProfile: async (): Promise<{ user: User }> => {

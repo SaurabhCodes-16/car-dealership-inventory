@@ -67,6 +67,35 @@ describe('Authentication API - TDD Test Suite', () => {
       expect(res.status).toBe(400);
       expect(res.body).toHaveProperty('error');
     });
+
+    it('should reject admin registration without passcode', async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Hacker Admin',
+          email: 'hacker@example.com',
+          password: 'password123',
+          role: 'admin'
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toMatch(/Admin Secret Passcode/i);
+    });
+
+    it('should allow admin registration with valid passcode', async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Authorized Staff',
+          email: 'staff@dealership.com',
+          password: 'password123',
+          role: 'admin',
+          adminSecretCode: 'dealership-admin-2026'
+        });
+
+      expect(res.status).toBe(201);
+      expect(res.body.user.role).toBe('admin');
+    });
   });
 
   describe('POST /api/auth/login', () => {

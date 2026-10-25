@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useInventory } from '../context/InventoryContext';
-import { Car, ShieldCheck, UserCheck, LogOut, ShoppingBag, Plus, Sparkles } from 'lucide-react';
+import { Car, LogOut, ShoppingBag, Plus } from 'lucide-react';
 
 interface NavbarProps {
   onOpenAuth: () => void;
@@ -14,7 +14,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAddVehicle,
   onOpenPurchases,
 }) => {
-  const { user, isAuthenticated, isAdmin, logout, quickDemoLogin } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { userPurchases } = useInventory();
 
   return (
@@ -41,36 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Quick Demo Role Switcher & Actions */}
+        {/* Actions */}
         <div className="flex items-center space-x-2.5 sm:space-x-4">
-          
-          {/* Quick Demo Switcher Pills */}
-          <div className="hidden md:flex items-center bg-[#F3F1EC] p-1 rounded-xl border border-stone-200/60 text-xs">
-            <span className="text-[10px] uppercase font-semibold text-stone-400 px-2 tracking-wider">
-              Quick Demo:
-            </span>
-            <button
-              onClick={() => quickDemoLogin('customer')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-soft ${
-                isAuthenticated && !isAdmin
-                  ? 'bg-white text-stone-900 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              Buyer Demo
-            </button>
-            <button
-              onClick={() => quickDemoLogin('admin')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-soft flex items-center space-x-1 ${
-                isAdmin
-                  ? 'bg-stone-900 text-stone-100 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <ShieldCheck className="w-3.5 h-3.5 mr-1 text-champagne-300" />
-              Admin Demo
-            </button>
-          </div>
 
           {/* Admin "Add Vehicle" Button */}
           {isAdmin && (

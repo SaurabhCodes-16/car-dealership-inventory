@@ -9,9 +9,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, pass: string) => Promise<void>;
-  register: (name: string, email: string, pass: string, role?: UserRole) => Promise<void>;
+  register: (name: string, email: string, pass: string, role?: UserRole, adminSecretCode?: string) => Promise<void>;
   logout: () => void;
-  quickDemoLogin: (role: 'admin' | 'customer') => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,10 +52,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (name: string, email: string, pass: string, role: UserRole = 'customer') => {
+  const register = async (name: string, email: string, pass: string, role: UserRole = 'customer', adminSecretCode?: string) => {
     setIsLoading(true);
     try {
-      const data = await authApi.register(name, email, pass, role);
+      const data = await authApi.register(name, email, pass, role, adminSecretCode);
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem('dealership_auth_token', data.token);
@@ -73,14 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('dealership_auth_user');
   };
 
-  const quickDemoLogin = async (role: 'admin' | 'customer') => {
-    if (role === 'admin') {
-      await login('admin@dealership.com', 'admin123');
-    } else {
-      await login('buyer@dealership.com', 'buyer123');
-    }
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -92,7 +83,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
-        quickDemoLogin,
       }}
     >
       {children}

@@ -17,7 +17,18 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { name, email, password, role } = parsed.data;
+    const { name, email, password, role, adminSecretCode } = parsed.data;
+
+    // Security check: restrict administrator registrations via secret passcode
+    if (role === 'admin') {
+      const configuredSecret = process.env.ADMIN_SECRET_KEY || 'dealership-admin-2026';
+      if (!adminSecretCode || adminSecretCode.trim() !== configuredSecret) {
+        res.status(403).json({
+          error: 'Unauthorized: A valid Admin Secret Passcode is required to register as Administrator.'
+        });
+        return;
+      }
+    }
 
     const existingUser = userRepo.findByEmail(email);
     if (existingUser) {

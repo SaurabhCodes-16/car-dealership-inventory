@@ -15,7 +15,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
   onClose,
   onOpenAuth,
 }) => {
-  const { isAuthenticated, user, quickDemoLogin } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { purchaseVehicle } = useInventory();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [receipt, setReceipt] = useState<PurchaseLog | null>(null);
@@ -161,20 +161,14 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
                   <span>Authentication Required</span>
                 </div>
                 <p className="text-[11px] text-amber-700">
-                  Please log in or click below for 1-click buyer demo credentials to complete this purchase.
+                  Please sign in or create an account to reserve and complete the purchase of this vehicle.
                 </p>
-                <div className="flex space-x-2 pt-1">
-                  <button
-                    onClick={() => quickDemoLogin('customer')}
-                    className="px-3 py-1.5 bg-amber-200/80 hover:bg-amber-300 rounded-lg text-amber-900 font-medium text-[11px] transition-colors"
-                  >
-                    1-Click Buyer Demo
-                  </button>
+                <div className="pt-1">
                   <button
                     onClick={onOpenAuth}
-                    className="px-3 py-1.5 bg-white border border-amber-300 rounded-lg text-amber-900 font-medium text-[11px] transition-colors"
+                    className="px-3.5 py-1.5 bg-stone-900 text-stone-100 hover:bg-stone-800 rounded-lg font-medium text-[11px] transition-colors shadow-sm"
                   >
-                    Sign In
+                    Sign In / Register
                   </button>
                 </div>
               </div>

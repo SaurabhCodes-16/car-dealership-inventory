@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { X, Lock, Mail, User as UserIcon, Shield, Sparkles } from 'lucide-react';
+import { X, Lock, Mail, User as UserIcon, Shield, Key } from 'lucide-react';
 import { UserRole } from '../types';
 
 interface AuthModalProps {
@@ -9,7 +9,7 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const { login, register, quickDemoLogin } = useAuth();
+  const { login, register } = useAuth();
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,6 +18,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<UserRole>('customer');
+  const [adminSecretCode, setAdminSecretCode] = useState('');
 
   if (!isOpen) return null;
 
@@ -30,7 +31,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       if (tab === 'login') {
         await login(email, password);
       } else {
-        await register(name, email, password, role);
+        await register(name, email, password, role, role === 'admin' ? adminSecretCode : undefined);
       }
       onClose();
     } catch (err: any) {
@@ -38,18 +39,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const fillDemo = (demoType: 'admin' | 'customer') => {
-    if (demoType === 'admin') {
-      setEmail('admin@dealership.com');
-      setPassword('admin123');
-    } else {
-      setEmail('buyer@dealership.com');
-      setPassword('buyer123');
-    }
-    setTab('login');
-    setError(null);
   };
 
   return (
@@ -95,35 +84,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* 1-Click Demo Fillers */}
-        <div className="px-6 pt-4">
-          <div className="p-3 bg-[#FBFBFA] rounded-2xl border border-stone-200/60 text-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">
-                1-Click Demo Logins:
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemo('customer')}
-                className="py-1.5 px-2.5 bg-white hover:bg-stone-50 border border-stone-200 rounded-xl text-[11px] font-medium text-stone-800 transition-colors text-left"
-              >
-                <p className="font-semibold text-stone-900">Buyer Account</p>
-                <p className="text-[10px] text-stone-400 truncate">buyer@dealership.com</p>
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemo('admin')}
-                className="py-1.5 px-2.5 bg-white hover:bg-stone-50 border border-stone-200 rounded-xl text-[11px] font-medium text-stone-800 transition-colors text-left"
-              >
-                <p className="font-semibold text-stone-900">Admin Account</p>
-                <p className="text-[10px] text-stone-400 truncate">admin@dealership.com</p>
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 pt-4 space-y-4 text-xs">
@@ -181,16 +141,72 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {tab === 'register' && (
-            <div>
-              <label className="block font-medium text-stone-700 mb-1">Role Permission</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-3 py-2 rounded-xl bg-[#FBFBFA] border border-stone-200 text-stone-900 focus:outline-none focus:border-stone-400"
-              >
-                <option value="customer">Customer (Standard Buyer)</option>
-                <option value="admin">Administrator (Manager Privileges)</option>
-              </select>
+            <div className="space-y-3 pt-1">
+              <div>
+                <label className="block font-medium text-stone-700 mb-1.5">Account Type</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setRole('customer'); setAdminSecretCode(''); }}
+                    className={`p-3 rounded-2xl border text-left transition-all ${
+                      role === 'customer'
+                        ? 'border-stone-900 bg-stone-900 text-white shadow-soft'
+                        : 'border-stone-200 bg-[#FBFBFA] hover:bg-stone-50 text-stone-700'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-1.5 mb-1">
+                      <UserIcon className={`w-3.5 h-3.5 ${role === 'customer' ? 'text-stone-300' : 'text-stone-500'}`} />
+                      <span className="font-semibold text-xs">Customer</span>
+                    </div>
+                    <p className={`text-[10px] ${role === 'customer' ? 'text-stone-300' : 'text-stone-400'}`}>
+                      Browse showroom & buy cars
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setRole('admin')}
+                    className={`p-3 rounded-2xl border text-left transition-all ${
+                      role === 'admin'
+                        ? 'border-stone-900 bg-stone-900 text-white shadow-soft'
+                        : 'border-stone-200 bg-[#FBFBFA] hover:bg-stone-50 text-stone-700'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-1.5 mb-1">
+                      <Shield className={`w-3.5 h-3.5 ${role === 'admin' ? 'text-champagne-300' : 'text-stone-500'}`} />
+                      <span className="font-semibold text-xs">Administrator</span>
+                    </div>
+                    <p className={`text-[10px] ${role === 'admin' ? 'text-stone-300' : 'text-stone-400'}`}>
+                      Manage inventory & stock
+                    </p>
+                  </button>
+                </div>
+              </div>
+
+              {role === 'admin' && (
+                <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl animate-fade-in space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-amber-900 flex items-center space-x-1.5">
+                      <Key className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Admin Passcode Required</span>
+                    </span>
+                    <span className="text-[9px] uppercase px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded-md font-mono">
+                      Staff Only
+                    </span>
+                  </div>
+                  <input
+                    type="password"
+                    required={role === 'admin'}
+                    value={adminSecretCode}
+                    onChange={(e) => setAdminSecretCode(e.target.value)}
+                    placeholder="Enter admin authorization passcode"
+                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-amber-300 text-stone-900 focus:outline-none focus:border-amber-500"
+                  />
+                  <p className="text-[10px] text-amber-700 leading-tight">
+                    Requires the authorization secret configured by the dealership owner.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
