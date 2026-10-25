@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import vehicleRoutes from './routes/vehicle.routes';
+import { getDatabase } from './config/database';
 
 const app = express();
 
@@ -13,13 +14,36 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 
-// Health check endpoint
+// Health check endpoint with diagnostic telemetry
 app.get('/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    service: 'Car Dealership Inventory API',
-    timestamp: new Date().toISOString()
-  });
+  try {
+    const db = getDatabase();
+    const vehicleCount = db.prepare('SELECT COUNT(*) as count FROM vehicles').get() as { count: number };
+    const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
+
+    res.json({
+      status: 'healthy',
+      service: 'Car Dealership Inventory API',
+      timestamp: new Date().toISOString(),
+      uptimeSeconds: Math.floor(process.uptime()),
+      database: {
+        engine: 'SQLite3 (WAL)',
+        status: 'connected',
+        vehiclesCount: vehicleCount.count,
+        usersCount: userCount.count
+      },
+      memory: {
+        rssMB: Math.round(process.memoryUsage().rss / (1024 * 1024)),
+        heapUsedMB: Math.round(process.memoryUsage().heapUsed / (1024 * 1024))
+      }
+    });
+  } catch (err: any) {
+    res.status(503).json({
+      status: 'unhealthy',
+      error: 'Database diagnostic check failed',
+      details: err.message
+    });
+  }
 });
 
 // 404 Handler
