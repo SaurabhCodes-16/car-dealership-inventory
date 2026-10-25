@@ -1,7 +1,7 @@
 # AURA Motors — Car Dealership Inventory System
 
 [![CI Pipeline](https://github.com/SaurabhCodes-16/car-dealership-inventory/actions/workflows/ci.yml/badge.svg)](https://github.com/SaurabhCodes-16/car-dealership-inventory/actions)
-[![CI Tests](https://img.shields.io/badge/tests-24%20passed-emerald)](https://github.com/SaurabhCodes-16/car-dealership-inventory)
+[![CI Tests](https://img.shields.io/badge/tests-25%20passed-emerald)](https://github.com/SaurabhCodes-16/car-dealership-inventory)
 [![License: MIT](https://img.shields.io/badge/License-MIT-stone.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-cyan.svg)](https://react.dev/)
@@ -237,18 +237,27 @@ Time:        4.096 s
 
 ---
 
-## Git Commit History & TDD Red-Green-Refactor Journey
+## Git Commit History & Continuous Hardening Journey
 
-This repository narrates the development journey through 6 disciplined commits:
+This repository narrates the full engineering journey through 15 disciplined, semantic commits:
 
-| Commit # | Hash | Timestamp | Message & TDD Phase | Co-Author |
+| Commit # | Hash | Timestamp | Message & Phase | Co-Author |
 |---|---|---|---|---|
-| 1 | `d516da1` | 10:35 AM | `chore: Initialize Car Dealership Inventory System architecture & schema` | Gemini |
-| 2 | `fa31820` | 11:22 AM | `test(backend): Add comprehensive TDD test suite for auth, vehicle CRUD, and inventory [RED]` | Gemini |
-| 3 | `19b08eb` | 12:48 PM | `feat(backend): Implement RESTful API, JWT auth, and atomic inventory management [GREEN]` | Gemini |
-| 4 | `4a74de6` | 1:42 PM | `refactor(backend): Decouple schema validation with Zod and sanitize controller inputs [REFACTOR]` | Gemini |
-| 5 | `3922c54` | 3:18 PM | `feat(frontend): Implement soft-editorial dealership SPA with live search, purchase flow, and admin portal` | Gemini |
-| 6 | `HEAD` | 4:12 PM | `docs: Add comprehensive documentation, test reports, AI usage disclosures, and PROMPTS.md` | Gemini |
+| 1 | `d516da1` | Oct 24, 10:35 AM | `chore: Initialize Car Dealership Inventory System architecture & schema` | Gemini |
+| 2 | `fa31820` | Oct 24, 11:22 AM | `test(backend): Add comprehensive TDD test suite for auth, vehicle CRUD, and inventory [RED]` | Gemini |
+| 3 | `19b08eb` | Oct 24, 12:48 PM | `feat(backend): Implement RESTful API, JWT auth, and atomic inventory management [GREEN]` | Gemini |
+| 4 | `4a74de6` | Oct 24, 1:42 PM | `refactor(backend): Decouple schema validation with Zod and sanitize controller inputs [REFACTOR]` | Gemini |
+| 5 | `3922c54` | Oct 24, 3:18 PM | `feat(frontend): Implement soft-editorial dealership SPA with live search, purchase flow, and admin portal` | Gemini |
+| 6 | `d0ab5df` | Oct 24, 4:12 PM | `docs: Add comprehensive documentation, test reports, AI usage disclosures, and PROMPTS.md` | Gemini |
+| 7 | `1c2bd1a` | Oct 25, 11:41 AM | `feat(frontend): Add keyboard shortcuts for search focus and ESC modal dismissal` | Gemini |
+| 8 | `50a1bc4` | Oct 25, 11:42 AM | `feat(backend): Enhance /health endpoint with database diagnostics and uptime telemetry` | Gemini |
+| 9 | `485181a` | Oct 25, 11:43 AM | `ci: Add GitHub Actions automated test and build workflow` | Gemini |
+| 10 | `786018c` | Oct 25, 11:53 AM | `security(backend): Add Helmet security headers and payload size boundaries` | Gemini |
+| 11 | `cbd59af` | Oct 25, 12:02 PM | `security(backend): Implement rate limiting middleware against brute-force and request flooding` | Gemini |
+| 12 | `208b32e` | Oct 25, 12:05 PM | `security(backend): Add strict input sanitization and email normalization` | Gemini |
+| 13 | `be18832` | Oct 25, 12:08 PM | `feat(frontend): Implement graceful image fallback and progressive load fade-in` | Gemini |
+| 14 | `94e3c27` | Oct 25, 12:10 PM | `feat(frontend): Add active filter tag chips with individual dismissal` | Gemini |
+| 15 | `9b31ae7` | Oct 25, 12:12 PM | `feat(backend): Add X-Request-ID correlation headers for request tracing and auditing` | Gemini |
 
 ---
 
