@@ -22,6 +22,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 }) => {
   const { isAuthenticated, isAdmin } = useAuth();
   const isOutOfStock = vehicle.quantity <= 0;
+  const fallbackImage = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+  const [imgSrc, setImgSrc] = React.useState(vehicle.imageUrl || fallbackImage);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    setImgSrc(vehicle.imageUrl || fallbackImage);
+    setIsLoaded(false);
+  }, [vehicle.imageUrl]);
 
   return (
     <div className="group bg-white rounded-2xl border border-[#EBE7DF] overflow-hidden shadow-soft hover:shadow-soft-hover transition-slow-soft flex flex-col justify-between">
@@ -33,10 +41,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           onClick={() => onSelectVehicle(vehicle)}
         >
           <img
-            src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80'}
+            src={imgSrc}
             alt={`${vehicle.make} ${vehicle.model}`}
-            className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-slow-soft"
+            className={`w-full h-full object-cover object-center group-hover:scale-[1.03] transition-slow-soft duration-500 ${isLoaded ? 'opacity-100' : 'opacity-20'}`}
             loading="lazy"
+            onLoad={() => setIsLoaded(true)}
+            onError={() => {
+              if (imgSrc !== fallbackImage) {
+                setImgSrc(fallbackImage);
+              }
+            }}
           />
 
           {/* Category & Year Tag */}
