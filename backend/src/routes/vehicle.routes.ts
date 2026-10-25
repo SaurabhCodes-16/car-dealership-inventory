@@ -11,6 +11,7 @@ import {
   getUserPurchases
 } from '../controllers/vehicle.controller';
 import { requireAuth, requireAdmin } from '../middleware/auth.middleware';
+import { purchaseRateLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ router.put('/:id', updateVehicle);
 router.delete('/:id', requireAdmin, deleteVehicle);
 
 // Inventory endpoints
-router.post('/:id/purchase', purchaseVehicle);
+router.post('/:id/purchase', purchaseRateLimiter, purchaseVehicle);
 router.post('/:id/restock', requireAdmin, restockVehicle);
 
 export default router;
