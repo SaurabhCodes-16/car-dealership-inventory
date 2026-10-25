@@ -149,12 +149,74 @@ export const FilterBar: React.FC = () => {
                 className="inline-flex items-center space-x-1 text-xs text-stone-500 hover:text-stone-900 underline underline-offset-2 transition-colors"
               >
                 <RotateCcw className="w-3 h-3" />
-                <span>Reset Filters</span>
+                <span>Reset All</span>
               </button>
             )}
           </div>
 
         </div>
+
+        {/* Active Filter Chips Strip */}
+        {isFiltered && (
+          <div className="pt-2 border-t border-stone-100 flex flex-wrap items-center gap-1.5 text-xs">
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-400 mr-1">Active Filters:</span>
+            {filters.searchQuery && (
+              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200">
+                <span>Query: "{filters.searchQuery}"</span>
+                <button
+                  onClick={() => setFilters((p) => ({ ...p, searchQuery: '' }))}
+                  className="hover:text-stone-900 ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.category !== 'All' && (
+              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200">
+                <span>{filters.category}</span>
+                <button
+                  onClick={() => setFilters((p) => ({ ...p, category: 'All' }))}
+                  className="hover:text-stone-900 ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.minPrice !== '' && (
+              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200">
+                <span>≥ ${Number(filters.minPrice).toLocaleString()}</span>
+                <button
+                  onClick={() => setFilters((p) => ({ ...p, minPrice: '' }))}
+                  className="hover:text-stone-900 ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.maxPrice !== '' && (
+              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200">
+                <span>≤ ${Number(filters.maxPrice).toLocaleString()}</span>
+                <button
+                  onClick={() => setFilters((p) => ({ ...p, maxPrice: '' }))}
+                  className="hover:text-stone-900 ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.inStockOnly && (
+              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200">
+                <span>In-Stock Only</span>
+                <button
+                  onClick={() => setFilters((p) => ({ ...p, inStockOnly: false }))}
+                  className="hover:text-stone-900 ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
 
       </div>
     </div>
