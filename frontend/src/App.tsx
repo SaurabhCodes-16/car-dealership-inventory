@@ -27,6 +27,31 @@ const MainLayout: React.FC = () => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false);
 
+  // Global keyboard shortcuts: Esc to dismiss modals, / to focus search bar
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedVehicle(null);
+        setPurchaseTarget(null);
+        setRestockTarget(null);
+        setEditTarget(null);
+        setIsAddOpen(false);
+        setIsAuthOpen(false);
+        setIsPurchasesOpen(false);
+      } else if (
+        e.key === '/' &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        const searchInput = document.getElementById('vehicle-search-input') as HTMLInputElement | null;
+        searchInput?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleDelete = async (vehicle: Vehicle) => {
     if (window.confirm(`Are you sure you want to permanently delete the ${vehicle.make} ${vehicle.model} from the dealership inventory?`)) {
       await deleteVehicle(vehicle.id);

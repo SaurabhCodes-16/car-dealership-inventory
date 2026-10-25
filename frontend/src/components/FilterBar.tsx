@@ -34,19 +34,24 @@ export const FilterBar: React.FC = () => {
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
+              id="vehicle-search-input"
               type="text"
               value={filters.searchQuery}
               onChange={(e) => setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))}
               placeholder="Search by make (Porsche, Genesis), model, or keyword..."
-              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#FBFBFA] border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-stone-400 focus:bg-white transition-soft"
+              className="w-full pl-10 pr-16 py-2.5 rounded-xl bg-[#FBFBFA] border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-stone-400 focus:bg-white transition-soft"
             />
-            {filters.searchQuery && (
+            {filters.searchQuery ? (
               <button
                 onClick={() => setFilters((prev) => ({ ...prev, searchQuery: '' }))}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
+            ) : (
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-stone-400 bg-stone-100 border border-stone-200 rounded absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none">
+                /
+              </kbd>
             )}
           </div>
 
